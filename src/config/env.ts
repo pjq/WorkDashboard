@@ -1,6 +1,6 @@
 export const config = {
   github: {
-    repositories: ['ChitChat', 'rpi'],
+    repositories: ['ChitChat', 'rpi', 'WorkDashboard'],
     token: import.meta.env.VITE_GITHUB_TOKEN || '',
   },
   jira: {
