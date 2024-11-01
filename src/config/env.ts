@@ -1,6 +1,6 @@
 export const config = {
   github: {
-    repositories: ['sf-android-core', 'sf-ios-core'],
+    repositories: ['ChitChat', 'rpi'],
     token: import.meta.env.VITE_GITHUB_TOKEN || '',
   },
   jira: {

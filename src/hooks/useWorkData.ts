@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { GithubData, JiraData, EmailData, ConfigData } from '../types/api';
+import { fetchGithubData, fetchJiraData, fetchEmailData } from '../api';
 
 export function useWorkData(config: ConfigData) {
   const [githubData, setGithubData] = useState<GithubData | null>(null);
@@ -11,7 +12,6 @@ export function useWorkData(config: ConfigData) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Simulated API calls - replace with actual API integration
         const mockData = {
           github: {
             pullRequests: [
@@ -65,9 +65,33 @@ export function useWorkData(config: ConfigData) {
           }
         };
 
-        setGithubData(mockData.github);
-        setJiraData(mockData.jira);
-        setEmailData(mockData.email);
+        const [github, jira, email] = await Promise.allSettled([
+          fetchGithubData(config.github),
+          fetchJiraData(config.jira),
+          fetchEmailData(config.email)
+        ]);
+
+        if (github.status === 'fulfilled') {
+          setGithubData(github.value);
+        } else {
+          setGithubData(mockData.github);
+          setError((prev) => `Github: ${github.reason instanceof Error ? github.reason.message : 'Failed to fetch data'}`);
+        }
+
+        // if (jira.status === 'fulfilled') {
+        //   setJiraData(jira.value);
+        // } else {
+        //   setJiraData(mockData.jira);
+        //   setError((prev) => `Jira: ${jira.reason instanceof Error ? jira.reason.message : 'Failed to fetch data'}`);
+        // }
+
+        // if (email.status === 'fulfilled') {
+        //   setEmailData(email.value);
+        // } else {
+        //   setEmailData(mockData.email);
+        //   setError((prev) => `Email: ${email.reason instanceof Error ? email.reason.message : 'Failed to fetch data'}`);
+        // }
+
         setLoading(false);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to fetch data');

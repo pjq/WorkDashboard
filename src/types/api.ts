@@ -55,4 +55,5 @@ export interface ConfigData {
     provider: 'gmail' | 'outlook';
     refreshToken: string;
   };
+  useMockData: true; // New flag to use mock data
 }
